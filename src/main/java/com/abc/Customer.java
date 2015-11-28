@@ -63,4 +63,16 @@ public class Customer {
     private String toDollars(double d){
         return String.format("$%,.2f", abs(d));
     }
+    
+    public void transfer(Account fromAccount, Account toAccount, double amount) {
+    	if(! accounts.contains(fromAccount) || ! accounts.contains(toAccount) ) {
+    		throw new IllegalArgumentException("transfering between acconts not owned by the cusomter");
+    	}
+    	if(amount < 0.0) {
+    		throw new IllegalArgumentException("amount must be greater than zero");
+    	}
+    	
+    	fromAccount.withdraw(amount);
+    	toAccount.deposit(amount);
+    }
 }

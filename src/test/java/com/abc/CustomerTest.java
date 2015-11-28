@@ -9,6 +9,8 @@ import static com.abc.AccountType.*;
 
 public class CustomerTest {
 
+	private static final double DOUBLE_DELTA = 1e-15;
+	
     @Test //Test customer statement generation
     public void testApp(){
 
@@ -62,6 +64,43 @@ public class CustomerTest {
     	}
     	catch (IllegalArgumentException e){
     		// okay!
+    	}
+    }
+    
+    @Test
+    public void testTransfer() {
+    	Account checkingAccount = Account.ofType(CHECKING);
+    	checkingAccount.deposit(1000);
+    	Account savingsAccount = Account.ofType(SAVINGS);
+    	savingsAccount.deposit(1000);
+    	Customer oscar = new Customer("Oscar");
+    		
+    	try {
+    		oscar.transfer(checkingAccount, savingsAccount, 500);
+    		fail("all transfer account should be owned by some customer");
+    	}
+    	catch (IllegalArgumentException e) {
+    		// okay!
+    	}
+    	
+    	oscar.openAccount(checkingAccount);
+    	oscar.openAccount(savingsAccount);
+    	
+    	try {
+    		oscar.transfer(checkingAccount, savingsAccount, 500);
+    		assertEquals(500, checkingAccount.sumTransactions(), DOUBLE_DELTA);
+    		assertEquals(1500, savingsAccount.sumTransactions(), DOUBLE_DELTA);
+    	}
+    	catch (IllegalArgumentException e) {
+    		fail("shouldn't throw exception for valid transfer");
+    	}
+    	
+    	try {
+    		oscar.transfer(checkingAccount, savingsAccount, -500);
+    		fail("transfer amount should be positive");
+    	}
+    	catch (IllegalArgumentException e) {
+    		// okay
     	}
     }
 }
