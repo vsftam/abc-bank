@@ -40,6 +40,10 @@ public class BankTest {
         checkingAccount.deposit(1500.0);
 
         assertEquals(2.0, bank.totalInterestPaid(), DOUBLE_DELTA);
+        
+        checkingAccount.withdraw(750.0);
+        
+        assertEquals(0.75, bank.totalInterestPaid(), DOUBLE_DELTA);
     }
 
     @Test
@@ -51,6 +55,23 @@ public class BankTest {
         checkingAccount.deposit(3000.0);
 
         assertEquals(170.0, bank.totalInterestPaid(), DOUBLE_DELTA);
+        
+        checkingAccount.withdraw(1500);
+        
+        assertEquals(45, bank.totalInterestPaid(), DOUBLE_DELTA);
+        
+        checkingAccount.withdraw(1000);
+        
+        assertEquals(10, bank.totalInterestPaid(), DOUBLE_DELTA);        
+    }
+    
+    @Test
+    public void firstCustomer() {
+    	Bank bank = new Bank();
+    	bank.addCustomer(new Customer("Amy").openAccount(Account.ofType(CHECKING)));
+    	bank.addCustomer(new Customer("Bill").openAccount(Account.ofType(SAVINGS)));
+    	bank.addCustomer(new Customer("Carol").openAccount(Account.ofType(MAXI_SAVINGS)));
+    	assertEquals("Amy", bank.getFirstCustomer());
     }
 
 }
