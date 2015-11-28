@@ -35,11 +35,6 @@ public class Bank {
     }
 
     public String getFirstCustomer() {
-        try {
-            return customers.get(0).getName();
-        } catch (Exception e){
-            e.printStackTrace();
-            return "Error";
-        }
+        return customers.size() == 0 ? "Error" : customers.get(0).getName();
     }
 }

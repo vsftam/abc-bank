@@ -33,24 +33,20 @@ public abstract class Account {
         }
     }
 
-public void withdraw(double amount) {
-    if (amount <= 0) {
-        throw new IllegalArgumentException("amount must be greater than zero");
-    } else {
-        transactions.add(new Transaction(-amount));
-    }
-}
+    public void withdraw(double amount) {
+	    if (amount <= 0) {
+	        throw new IllegalArgumentException("amount must be greater than zero");
+	    } else {
+	        transactions.add(new Transaction(-amount));
+	    }
+	}
 
     public double interestEarned() {
         double amount = sumTransactions();
         return calculateInterest(amount);
     }
 
-    public double sumTransactions() {
-       return checkIfTransactionsExist(true);
-    }
-
-    private double checkIfTransactionsExist(boolean checkAll) {
+    double sumTransactions() {
         double amount = 0.0;
         for (Transaction t: transactions)
             amount += t.amount;
@@ -61,5 +57,5 @@ public void withdraw(double amount) {
     
     abstract public String toString();
     
-    abstract public double calculateInterest(double amount);
+    abstract protected double calculateInterest(double amount);
 }

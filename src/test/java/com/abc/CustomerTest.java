@@ -4,6 +4,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static com.abc.AccountType.*;
 
 public class CustomerTest {
@@ -35,24 +36,32 @@ public class CustomerTest {
     }
 
     @Test
-    public void testOneAccount(){
+    public void testOpenAccount(){
         Customer oscar = new Customer("Oscar").openAccount(Account.ofType(SAVINGS));
         assertEquals(1, oscar.getNumberOfAccounts());
-    }
-
-    @Test
-    public void testTwoAccount(){
-        Customer oscar = new Customer("Oscar")
-                .openAccount(Account.ofType(SAVINGS));
+        
         oscar.openAccount(Account.ofType(CHECKING));
         assertEquals(2, oscar.getNumberOfAccounts());
     }
 
-    @Ignore
-    public void testThreeAcounts() {
-        Customer oscar = new Customer("Oscar")
-                .openAccount(Account.ofType(SAVINGS));
-        oscar.openAccount(Account.ofType(CHECKING));
-        assertEquals(3, oscar.getNumberOfAccounts());
+    @Test
+    public void testInvalidDespositWithdraw() {
+    	Account checkingAccount = Account.ofType(CHECKING);
+    	Customer oscar = new Customer("Oscar").openAccount(checkingAccount);
+    	try {
+    		checkingAccount.deposit(-1000);
+    		fail("Should have thrown IllegalArgumentException for negative deposit");
+    	}
+    	catch (IllegalArgumentException e){
+    		// okay!
+    	}
+    	
+    	try {
+    		checkingAccount.withdraw(-1000);
+    		fail("Should have thrown IllegalArgumentException for negative withdraw");
+    	}
+    	catch (IllegalArgumentException e){
+    		// okay!
+    	}
     }
 }
