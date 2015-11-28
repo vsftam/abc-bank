@@ -6,7 +6,7 @@ import java.util.Date;
 public class Transaction {
     public final double amount;
 
-    private Date transactionDate;
+    protected Date transactionDate;
 
     public Date getTransactionDate() {
     	return transactionDate;
@@ -16,5 +16,4 @@ public class Transaction {
         this.amount = amount;
         this.transactionDate = DateProvider.now();
     }
-
 }

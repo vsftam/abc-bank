@@ -5,6 +5,8 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static com.abc.AccountType.*;
 
+import java.util.Calendar;
+import java.util.Date;
 
 public class BankTest {
     private static final double DOUBLE_DELTA = 1e-15;
@@ -59,6 +61,7 @@ public class BankTest {
         Account maxisavingsAccount = Account.ofType(MAXI_SAVINGS);
         bank.addCustomer(new Customer("Bill").openAccount(maxisavingsAccount));
 
+        /**
         maxisavingsAccount.deposit(3000.0);
 
         assertEquals(170.0, bank.totalInterestPaid(), DOUBLE_DELTA);
@@ -69,7 +72,29 @@ public class BankTest {
         
         maxisavingsAccount.withdraw(1000);
         
-        assertEquals(10, bank.totalInterestPaid(), DOUBLE_DELTA);        
+        assertEquals(10, bank.totalInterestPaid(), DOUBLE_DELTA);   
+        */
+        Date now = DateProvider.now();
+        maxisavingsAccount.addTransaction(new FakeTransaction(1000, now));
+        assertEquals(50, bank.totalInterestPaid(), DOUBLE_DELTA);  
+        
+        maxisavingsAccount.addTransaction(new FakeTransaction(400, now));
+        assertEquals(70, bank.totalInterestPaid(), DOUBLE_DELTA);
+        
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(now);
+		cal.add(Calendar.DATE, -11);
+		Date elevenDaysAgo = cal.getTime();
+		
+        maxisavingsAccount.addTransaction(new FakeTransaction(-200, elevenDaysAgo));
+        assertEquals(60, bank.totalInterestPaid(), DOUBLE_DELTA);
+        
+		cal.add(Calendar.DATE, 3);
+		Date eightDaysAgo = cal.getTime();
+		
+        maxisavingsAccount.addTransaction(new FakeTransaction(-200, eightDaysAgo));
+        
+        assertEquals(1, bank.totalInterestPaid(), DOUBLE_DELTA);
     }
     
     @Test
@@ -94,12 +119,20 @@ public class BankTest {
         Account savingsAccount = Account.ofType(SAVINGS);
         Customer amy = new Customer("Amy").openAccount(savingsAccount);
         savingsAccount.deposit(2000.0);
-        
-        Account maxisavingsAccount = Account.ofType(MAXI_SAVINGS);
-        amy.openAccount(maxisavingsAccount);
-        maxisavingsAccount.deposit(3000.0);
         bank.addCustomer(amy);
         
-        assertEquals(174, bank.totalInterestPaid(), DOUBLE_DELTA);
+        assertEquals(4, bank.totalInterestPaid(), DOUBLE_DELTA);
+    }
+    
+    class FakeTransaction extends Transaction {
+    	
+        public FakeTransaction(double amount, Date d) {
+            super(amount);
+            setTransactionDate(d);
+        }
+        
+        public void setTransactionDate(Date d) {
+        	transactionDate = d;
+        }
     }
 }

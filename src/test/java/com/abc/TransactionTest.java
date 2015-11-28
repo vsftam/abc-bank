@@ -11,4 +11,5 @@ public class TransactionTest {
         assertTrue(t instanceof Transaction);
         assertTrue(t.amount == 5);
     }
+   
 }

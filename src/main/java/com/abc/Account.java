@@ -29,7 +29,7 @@ public abstract class Account {
         if (amount <= 0) {
             throw new IllegalArgumentException("amount must be greater than zero");
         } else {
-            transactions.add(new Transaction(amount));
+            addTransaction(new Transaction(amount));
         }
     }
 
@@ -37,9 +37,13 @@ public abstract class Account {
 	    if (amount <= 0) {
 	        throw new IllegalArgumentException("amount must be greater than zero");
 	    } else {
-	        transactions.add(new Transaction(-amount));
+	        addTransaction(new Transaction(-amount));
 	    }
 	}
+    
+    protected void addTransaction(Transaction t) {
+    	transactions.add(t);
+    }
 
     public double interestEarned() {
         double amount = sumTransactions();
